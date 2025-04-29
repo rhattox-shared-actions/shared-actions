@@ -1,31 +1,31 @@
-name: Deploy ArgoCD
+name: Github Tag Workflow
 
 on:
   workflow_call:
     inputs:
       APPLICATION_VERSION:
-        required: true
+        required: false
+        description: Application version to build
         type: string
-        description: The version of the application to deploy
+        default: ./
     secrets:
       GHA_TOKEN:
         required: true
         description: Token to authenticate with the repository
 
 jobs:
-  deploy:
-    timeout-minutes: 2
-    name: Deploy version to ArgoCD
+  nodejs-preflight:
+    timeout-minutes: 10
+    name: Github Tag Setup
     runs-on: self-hosted
     container:
       image: bcovies/toolbox:0.0.1
+
     steps:
       - name: Checkout Repository
         uses: rhattox-shared-actions/shared-actions/actions/git/checkout@main
         with:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
 
-      - name: Commit Version and Push Changes
-        uses: rhattox-shared-actions/shared-actions/actions/etc/argocd/deploy-new-image@main
-        with:
-          APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
+      - name: Get Git Tags
+        uses: rhattox-shared-actions/shared-actions/actions/git/list-tags@main

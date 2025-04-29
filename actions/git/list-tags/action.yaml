@@ -1,0 +1,23 @@
+name: Github Tag
+description: Github Tag
+
+outputs:
+  TAGS:
+    description: A JSON array of all Git tags in the repository.
+    value: ${{ steps.get-git-tags.outputs.tag_json }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get all Git tags
+      shell: bash
+      id: get-git-tags
+      run: |
+        tags=($(git tag))
+        tag_json=$(printf '[%s]\n' "$(printf '"%s",' "${tags[@]}" | sed 's/,$//')")
+        echo "tag_json=${tag_json}" >> $GITHUB_OUTPUT
+
+    - name: Print tags
+      shell: bash
+      run: |
+        echo "Tags: ${{ steps.get-git-tags.outputs.tag_json }}"

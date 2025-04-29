@@ -31,7 +31,7 @@ jobs:
       APPLICATION_NAME: ${{ steps.get-application-name.outputs.NAME }}
     steps:
       - name: Checkout Repository
-        uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
+        uses: rhattox-shared-actions/shared-actions/actions/git/checkout@main
         with:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
 

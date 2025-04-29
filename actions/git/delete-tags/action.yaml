@@ -1,0 +1,9 @@
+name: Github Tag
+description: Github Tag
+
+runs:
+  using: "composite"
+  steps:
+    - name: Github Tag
+      shell: bash
+      run: |

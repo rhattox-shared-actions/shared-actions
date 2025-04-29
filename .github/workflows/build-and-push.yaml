@@ -31,7 +31,7 @@ jobs:
       image: docker:28-cli
     steps:
       - name: Checkout Repository
-        uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
+        uses: rhattox-shared-actions/shared-actions/actions/git/checkout@main
         with:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
 
