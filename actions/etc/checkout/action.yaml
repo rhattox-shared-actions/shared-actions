@@ -1,9 +1,13 @@
 name: Checkout
 description: Check out a repository
+inputs:
+  GITHUB_TOKEN:
+    description: Token to authenticate with the repository
+    required: true
 
 runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.GITHUB_TOKEN }}
