@@ -42,4 +42,4 @@ jobs:
           APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
 
       - name: Delete Git Tag
-        uses: rhattox-shared-actions/shared-actions/actions/git/create-tag@main
+        uses: rhattox-shared-actions/shared-actions/actions/git/delete-tag@main
