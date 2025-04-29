@@ -1,0 +1,40 @@
+name: Preflight Build for NodeJS
+
+on:
+  workflow_call:
+    secrets:
+      GHA_TOKEN:
+        required: true
+        description: Token to authenticate with the repository
+      DOCKER_USERNAME:
+        required: true
+        description: DockerHub username
+      DOCKER_TOKEN:
+        required: true
+        description: DockerHub token
+
+jobs:
+  nodejs-preflight:
+    timeout-minutes: 10
+    name: Preflight Build for NodeJS
+    runs-on: self-hosted
+    container:
+      image: bcovies/toolbox:0.0.1
+    steps:
+      - name: Checkout Repository
+        uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
+        with:
+          GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
+
+      - name: Get Node Package.json Version
+        id: get-version
+        uses: rhattox-shared-actions/shared-actions/actions/node/get-version@main
+
+      - name: Build Docker Image and Push to DockerHub
+        uses: rhattox-shared-actions/shared-actions/.github/workflows/build-and-push.yaml@main
+        with:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+          GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
+          APPLICATION_VERSION: ${{ steps.get-version.outputs.version }}
+          APPLICATION_NAME: ${{ github.event.repository.name }}
