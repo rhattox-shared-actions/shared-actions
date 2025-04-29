@@ -11,3 +11,7 @@ runs:
     - uses: actions/checkout@v4
       with:
         token: ${{ inputs.GHA_TOKEN }}
+
+    - name: Set Git safe directory
+      shell: bash
+      run: git config --global --add safe.directory ${{ github.workspace }}
