@@ -13,3 +13,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
+
+      - name: Commit Version and Push Changes
+        uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
