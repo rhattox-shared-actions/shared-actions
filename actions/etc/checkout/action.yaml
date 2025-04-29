@@ -1,7 +1,7 @@
 name: Checkout
 description: Check out a repository
 inputs:
-  GITHUB_TOKEN:
+  GHA_TOKEN:
     description: Token to authenticate with the repository
     required: true
 
@@ -10,4 +10,4 @@ runs:
   steps:
     - uses: actions/checkout@v4
       with:
-        token: ${{ inputs.GITHUB_TOKEN }}
+        token: ${{ inputs.GHA_TOKEN }}
