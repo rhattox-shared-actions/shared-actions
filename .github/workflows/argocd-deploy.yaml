@@ -2,26 +2,14 @@ name: Deploy ArgoCD
 
 on:
   workflow_call:
-    inputs:
-      GITHUB_USERNAME:
-        required: true
-        type: string
-      TOOLBOX_VERSION:
-        required: false
-        type: string
-        default: 0.0.1
-      RUNNER:
-        required: false
-        type: string
-        default: self-hosted
 
 jobs:
   deploy:
     timeout-minutes: 2
     name: Deploy version to ArgoCD
-    runs-on: ${{ inputs.RUNNER}}
+    runs-on: self-hosted
     container:
-      image: ${{inputs.GITHUB_USERNAME}}/toolbox:${{ inputs.TOOLBOX_VERSION }}
+      image: bcovies/toolbox:0.0.1
     steps:
       - name: Checkout Repository
         uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
