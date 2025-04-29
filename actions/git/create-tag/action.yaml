@@ -7,3 +7,4 @@ runs:
     - name: Github Tag
       shell: bash
       run: |
+        set -euo pipefail

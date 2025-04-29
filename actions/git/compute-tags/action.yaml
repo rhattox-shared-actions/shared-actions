@@ -1,9 +1,21 @@
-name: Github Tag
-description: Github Tag
+name: Compute Github Tag
+description: Check for the latest tag in the repository and compute the next version based on the current version and the latest tag.
+inputs:
+  APPLICATION_VERSION:
+    required: true
+    description: Application version to build
+    default: ./
+  GIT_TAG_LIST:
+    required: true
+    description: List of git tags to use for versioning
 
 runs:
   using: "composite"
   steps:
-    - name: Github Tag
+    - name: Compute Github Tag
       shell: bash
       run: |
+        set -euo pipefail
+
+        echo "APPLICATION_VERSION=${{ inputs.APPLICATION_VERSION }}"
+        echo "GIT_TAG_LIST=${{ inputs.GIT_TAG_LIST }}"

@@ -28,4 +28,13 @@ jobs:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
 
       - name: Get Git Tags
+        id: git-get-tags
         uses: rhattox-shared-actions/shared-actions/actions/git/list-tags@main
+
+      - name: Compute Git Tags
+        id: git-compute-tags
+        uses: rhattox-shared-actions/shared-actions/actions/git/list-tags@main
+        with:
+          APPLICATION_VERSION: "0.0.1"
+          # APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
+          GIT_TAG_LIST: ${{ steps.git-get-tags.outputs.GIT_TAG_LIST }}

@@ -22,4 +22,5 @@ runs:
     - name: Login to GitHub Container Registry
       shell: sh
       run: |
+        set -euo pipefail
         docker build -t ${{ inputs.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ inputs.DOCKER_IMAGE_TAG }}  ${{ inputs.DOCKERFILE_PATH }}
