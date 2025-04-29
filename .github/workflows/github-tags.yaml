@@ -26,20 +26,20 @@ jobs:
         with:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
 
-      - name: Get Git Tags
-        id: git-get-tags
-        uses: rhattox-shared-actions/shared-actions/actions/git/list-tags@main
+      - name: Get Git Tag
+        id: git-get-tag
+        uses: rhattox-shared-actions/shared-actions/actions/git/list-tag@main
 
-      - name: Compute Git Tags
-        uses: rhattox-shared-actions/shared-actions/actions/git/compute-tags@main
+      - name: Compute Git Tag
+        uses: rhattox-shared-actions/shared-actions/actions/git/compute-tag@main
         with:
           APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
-          GIT_TAG_LIST: ${{ steps.git-get-tags.outputs.GIT_TAG_LIST }}
+          GIT_TAG_LIST: ${{ steps.git-get-tag.outputs.GIT_TAG_LIST }}
 
-      - name: Create Git Tags
-        uses: rhattox-shared-actions/shared-actions/actions/git/create-tags@main
+      - name: Create Git Tag
+        uses: rhattox-shared-actions/shared-actions/actions/git/create-tag@main
         with:
           APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
 
-      - name: Delete Git Tags
-        uses: rhattox-shared-actions/shared-actions/actions/git/create-tags@main
+      - name: Delete Git Tag
+        uses: rhattox-shared-actions/shared-actions/actions/git/create-tag@main
