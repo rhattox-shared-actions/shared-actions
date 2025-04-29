@@ -15,6 +15,6 @@ runs:
       run: |
         #!/usr/bin/env bash
         set -euo pipefail
-        tag=$(git describe --tags --abbrev=0 || echo "")
+        tag=$(git describe --tags --abbrev=0 || echo "error")
         echo "tag=${tag}" 
         echo "tag=${tag}" >> $GITHUB_OUTPUT
