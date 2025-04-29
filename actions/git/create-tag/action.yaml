@@ -1,5 +1,10 @@
-name: Github Tag
-description: Github Tag
+name: Create Github Tag
+description: Create Github Tag
+
+inputs:
+  APPLICATION_VERSION:
+    required: true
+    description: Application version to build
 
 runs:
   using: "composite"
@@ -9,3 +14,7 @@ runs:
       run: |
         #!/usr/bin/env bash
         set -euo pipefail
+
+        git tag ${{ inputs.APPLICATION_VERSION }}
+        git push origin ${{ inputs.APPLICATION_VERSION }}
+        echo "Tag ${{ inputs.APPLICATION_VERSION }} created and pushed to origin."

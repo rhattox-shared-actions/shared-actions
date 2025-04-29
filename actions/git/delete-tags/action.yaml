@@ -1,5 +1,5 @@
-name: Github Tag
-description: Github Tag
+name: Delete Oldest Github Tag
+description: Delete the oldest tag from the repository if there are more than 10 tags.
 
 runs:
   using: "composite"
@@ -9,4 +9,19 @@ runs:
       run: |
         #!/usr/bin/env bash
         set -euo pipefail
-    
+
+
+        # Fetch all tags from the remote
+        git fetch --tags
+
+        # Check if there are more than 10 tags
+        if [ $(git tag | wc -l) -gt 10 ]; then
+            # Get the oldest tag
+            oldest_tag=$(git tag --sort=creatordate | head -n 1)
+            
+            # Delete the oldest tag locally
+            git tag -d "$oldest_tag"
+            
+            # Delete the oldest tag remotely
+            git push --delete origin "$oldest_tag"
+        fi

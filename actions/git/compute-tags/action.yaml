@@ -4,7 +4,7 @@ inputs:
   APPLICATION_VERSION:
     required: true
     description: Application version to build
-    default: ./
+    
   GIT_TAG_LIST:
     required: true
     description: List of git tags to use for versioning

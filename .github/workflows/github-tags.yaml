@@ -7,7 +7,6 @@ on:
         required: false
         description: Application version to build
         type: string
-        default: ./
     secrets:
       GHA_TOKEN:
         required: true
@@ -32,9 +31,15 @@ jobs:
         uses: rhattox-shared-actions/shared-actions/actions/git/list-tags@main
 
       - name: Compute Git Tags
-        id: git-compute-tags
         uses: rhattox-shared-actions/shared-actions/actions/git/compute-tags@main
         with:
-          APPLICATION_VERSION: "0.0.1"
-          # APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
+          APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
           GIT_TAG_LIST: ${{ steps.git-get-tags.outputs.GIT_TAG_LIST }}
+
+      - name: Create Git Tags
+        uses: rhattox-shared-actions/shared-actions/actions/git/create-tags@main
+        with:
+          APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
+
+      - name: Delete Git Tags
+        uses: rhattox-shared-actions/shared-actions/actions/git/create-tags@main
