@@ -1,0 +1,21 @@
+name: Push Docker Image
+description: Push Docker Image
+
+inputs:
+  DOCKER_USERNAME:
+    required: true
+    description: The username for DockerHub
+  DOCKER_IMAGE_NAME:
+    required: true
+    description: The image for DockerHub
+  DOCKER_IMAGE_TAG:
+    required: true
+    description: The tag for DockerHub
+
+runs:
+  using: "composite"
+  steps:
+    - name: Login to GitHub Container Registry
+      shell: bash
+      run: |
+        docker push ${{ inputs.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ inputs.DOCKER_IMAGE_TAG }}

@@ -1,0 +1,27 @@
+name: Get NodeJs App Version
+description: Get the version of a NodeJs application
+
+inputs:
+  PACKAGE_JSON_PATH:
+    description: The path to the package.json file - file not included
+    required: false
+    default: ./
+
+outputs:
+  VERSION:
+    description: The version of the NodeJs application
+    value: ${{ steps.get-version.outputs.version }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get NodeJs App Version
+      id: get-version
+      shell: bash
+      run: |
+        cd ${{ inputs.PACKAGE_JSON_PATH }}
+
+        version=$(jq -r .version package.json)
+
+        echo "version=$version"
+        echo "version=$version" >> $GITHUB_OUTPUT

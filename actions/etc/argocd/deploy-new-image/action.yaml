@@ -1,0 +1,38 @@
+name: ArgoCD Deploy
+description: Commit a new image tag for the repository
+
+inputs:
+  GITHUB_USERNAME:
+    required: false
+    description: The username for GitHub
+    default: "github-actions[bot]"
+  GITHUB_USERMAIL:
+    required: false
+    description: The username for GitHub
+    default: "41898282+github-actions[bot]@users.noreply.github.com"
+  HELM_VALUES_FILE:
+    required: false
+    description: The path for helm values file
+    default: "./helm/values.yaml"
+  HELM_VALUES_TAG:
+    required: false
+    description: The tag for helm values file
+    default: ".image.tag"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Update image tag in values.yaml
+      shell: bash
+      run: |
+        yq -i '${{ inputs.HELM_VALUES_TAG }} = "${{ needs.get-version.outputs.version }}"' ${{ inputs.HELM_VALUES_FILE }}
+
+    - name: Commit and push changes
+      shell: bash
+      run: |
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        git config user.name "${{ inputs.GITHUB_USERNAME }}"
+        git config user.email "${{ inputs.GITHUB_USERMAIL }}"          
+        git add ${{ inputs.HELM_VALUES_FILE }}
+        git commit -m "chore: automated deploy version [skip ci]" || echo "Nothing to commit"
+        git push
