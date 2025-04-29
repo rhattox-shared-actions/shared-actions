@@ -33,7 +33,7 @@ jobs:
 
       - name: Compute Git Tags
         id: git-compute-tags
-        uses: rhattox-shared-actions/shared-actions/actions/git/list-tags@main
+        uses: rhattox-shared-actions/shared-actions/actions/git/compute-tags@main
         with:
           APPLICATION_VERSION: "0.0.1"
           # APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
