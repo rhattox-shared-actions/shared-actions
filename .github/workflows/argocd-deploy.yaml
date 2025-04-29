@@ -2,6 +2,11 @@ name: Deploy ArgoCD
 
 on:
   workflow_call:
+    inputs:
+      APPLICATION_VERSION:
+        required: true
+        type: string
+        description: The version of the application to deploy
 
 jobs:
   deploy:
@@ -15,4 +20,6 @@ jobs:
         uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
 
       - name: Commit Version and Push Changes
-        uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
+        uses: rhattox-shared-actions/shared-actions/actions/etc/argocd/deploy-new-image@main
+        with:
+          APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
