@@ -4,7 +4,7 @@ description: Github Tag
 outputs:
   GIT_TAG_LIST:
     description: A JSON array of all Git tags in the repository.
-    value: ${{ steps.get-git-tags.outputs.tag_json }}
+    value: ${{ steps.get-git-tags.outputs.tag }}
 
 runs:
   using: "composite"
@@ -15,13 +15,6 @@ runs:
       run: |
         #!/usr/bin/env bash
         set -euo pipefail
-        tags=($(git tag))
-        tag_json=$(printf '[%s]\n' "$(printf '"%s",' "${tags[@]}" | sed 's/,$//')")
-        echo "tag_json=${tag_json}" >> $GITHUB_OUTPUT
-
-    - name: Print tags
-      shell: bash
-      run: |
-        #!/usr/bin/env bash
-        set -euo pipefail
-        echo "Tags: ${{ steps.get-git-tags.outputs.tag_json }}"
+        tag=$(git describe --tags --abbrev=0)
+        echo "tag=${tag}" 
+        echo "tag=${tag}" >> $GITHUB_OUTPUT
