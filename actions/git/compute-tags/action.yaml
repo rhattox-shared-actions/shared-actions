@@ -15,6 +15,7 @@ runs:
     - name: Compute Github Tag
       shell: bash
       run: |
+        #!/usr/bin/env bash
         set -euo pipefail
 
         echo "APPLICATION_VERSION=${{ inputs.APPLICATION_VERSION }}"

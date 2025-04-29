@@ -18,5 +18,6 @@ runs:
     - name: Push to DockerHub Registry
       shell: sh
       run: |
+        #!/usr/bin/env bash
         set -euo pipefail
         docker push ${{ inputs.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ inputs.DOCKER_IMAGE_TAG }}

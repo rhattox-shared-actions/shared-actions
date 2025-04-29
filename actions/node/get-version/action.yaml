@@ -19,6 +19,7 @@ runs:
       id: get-version
       shell: bash
       run: |
+        #!/usr/bin/env bash
         set -euo pipefail
         cd ${{ inputs.PACKAGE_JSON_PATH }}
 

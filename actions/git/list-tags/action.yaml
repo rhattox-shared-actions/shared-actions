@@ -13,6 +13,7 @@ runs:
       shell: bash
       id: get-git-tags
       run: |
+        #!/usr/bin/env bash
         set -euo pipefail
         tags=($(git tag))
         tag_json=$(printf '[%s]\n' "$(printf '"%s",' "${tags[@]}" | sed 's/,$//')")
@@ -21,5 +22,6 @@ runs:
     - name: Print tags
       shell: bash
       run: |
+        #!/usr/bin/env bash
         set -euo pipefail
         echo "Tags: ${{ steps.get-git-tags.outputs.tag_json }}"
