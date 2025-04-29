@@ -20,3 +20,11 @@ runs:
 
         echo "APPLICATION_VERSION=${{ inputs.APPLICATION_VERSION }}"
         echo "GIT_TAG_LIST=${{ inputs.GIT_TAG_LIST }}"
+
+
+
+        if [ -z "$GIT_TAG_LIST" ] || [ "$(echo "$GIT_TAG_LIST" | jq length)" -eq 0 ]; then
+          echo "The JSON is empty."
+        else
+          echo "The JSON is not empty."
+        fi
