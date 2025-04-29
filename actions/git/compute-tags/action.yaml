@@ -22,8 +22,8 @@ runs:
         echo "GIT_TAG_LIST=${{ inputs.GIT_TAG_LIST }}"
 
 
-        if [ "$GIT_TAG_LIST" != "error" ]; then
-          if [ "$APPLICATION_VERSION" = "$GIT_TAG_LIST" ]; then
+        if [ "${GIT_TAG_LIST}" != "error" ]; then
+          if [ "${APPLICATION_VERSION}" = "${GIT_TAG_LIST}" ]; then
             echo "Version not updated."
             exit 1
           fi
