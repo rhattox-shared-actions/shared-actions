@@ -49,7 +49,7 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ inputs.APPLICATION_VERSION }}
 
       - name: Push Docker image
-        uses: rhattox-shared-actions/shared-actions/actions/docker/build@main
+        uses: rhattox-shared-actions/shared-actions/actions/docker/push@main
         with:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_IMAGE_NAME: ${{ inputs.APPLICATION_NAME }}
