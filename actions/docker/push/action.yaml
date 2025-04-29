@@ -16,6 +16,6 @@ runs:
   using: "composite"
   steps:
     - name: Login to GitHub Container Registry
-      shell: bash
+      shell: sh
       run: |
         docker push ${{ inputs.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ inputs.DOCKER_IMAGE_TAG }}
