@@ -28,6 +28,7 @@ jobs:
       image: bcovies/toolbox:0.0.1
     outputs:
       APPLICATION_VERSION: ${{ steps.get-application-version.outputs.VERSION }}
+      APPLICATION_NAME: ${{ steps.get-application-name.outputs.NAME }}
     steps:
       - name: Checkout Repository
         uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
@@ -40,13 +41,17 @@ jobs:
         with:
           PACKAGE_JSON_PATH: ${{ inputs.PACKAGE_JSON_PATH }}
 
+      - name: Get Application Name
+        id: get-application-name
+        uses: rhattox-shared-actions/shared-actions/actions/etc/get-repository-name@main
+
   build-and-push:
     needs: nodejs-preflight
     name: Build Docker Image and Push to DockerHub
     uses: rhattox-shared-actions/shared-actions/.github/workflows/build-and-push.yaml@main
     with:
       APPLICATION_VERSION: ${{ needs.nodejs-preflight.outputs.APPLICATION_VERSION }}
-      APPLICATION_NAME: ${{ github.event.repository.name }}
+      APPLICATION_NAME: ${{ needs.nodejs-preflight.outputs.APPLICATION_NAME }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}

@@ -1,0 +1,16 @@
+name: Get Repository Name
+description: Get Github Repository Name and Sanitaze it
+outputs:
+  NAME:
+    description: The sanitized repository name
+    value: ${{ steps.get-repo-name.outputs.NAME }}
+runs:
+  using: "composite"
+  steps:
+    - name: Get Repository Name and Sanitize it
+      id: get-repo-name
+      shell: bash
+      run: |
+        NAME=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+        echo "NAME=${NAME}"
+        echo "NAME=${NAME}" >> $GITHUB_OUTPUT
