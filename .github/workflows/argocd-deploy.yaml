@@ -16,6 +16,11 @@ jobs:
     container:
       image: bcovies/toolbox:0.0.1
     steps:
+      - name: debug
+        run: |
+          echo "APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}"
+          echo "GHA_TOKEN: ${{ secrets.GHA_TOKEN }}"
+          
       - name: Checkout Repository
         uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
         with:
