@@ -22,7 +22,7 @@ runs:
         echo "GIT_TAG_LIST=${{ inputs.GIT_TAG_LIST }}"
 
 
-        if [ "$(echo "$GIT_TAG_LIST" | jq length)" -eq 0 ]; then
+        if [[ "$(echo "$GIT_TAG_LIST" | jq length)" -eq 0 ]]; then
           echo "The JSON is empty."
         else
           echo "The JSON is not empty."
