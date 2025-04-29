@@ -2,6 +2,12 @@ name: Preflight Build for NodeJS
 
 on:
   workflow_call:
+    inputs:
+      PACKAGE_JSON_PATH:
+        required: false
+        description: Path to the package.json file - file not included
+        type: string
+        default: ./
     secrets:
       GHA_TOKEN:
         required: true
@@ -31,6 +37,8 @@ jobs:
       - name: Get Node Package.json Version
         id: get-application-version
         uses: rhattox-shared-actions/shared-actions/actions/node/get-version@main
+        with:
+          PACKAGE_JSON_PATH: ${{ inputs.PACKAGE_JSON_PATH }}
 
   build-and-push:
     needs: nodejs-preflight
