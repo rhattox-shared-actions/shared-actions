@@ -19,8 +19,8 @@ jobs:
       - name: Checkout Repository
         uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Commit Version and Push Changes
         uses: rhattox-shared-actions/shared-actions/actions/etc/argocd/deploy-new-image@main
         with:
