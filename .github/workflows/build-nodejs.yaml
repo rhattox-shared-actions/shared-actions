@@ -20,6 +20,8 @@ jobs:
     runs-on: self-hosted
     container:
       image: bcovies/toolbox:0.0.1
+    outputs:
+      APPLICATION_VERSION: ${{ steps.get-application-version.outputs.VERSION }}
     steps:
       - name: Checkout Repository
         uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
@@ -27,14 +29,17 @@ jobs:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
 
       - name: Get Node Package.json Version
-        id: get-version
+        id: get-application-version
         uses: rhattox-shared-actions/shared-actions/actions/node/get-version@main
 
-      - name: Build Docker Image and Push to DockerHub
-        uses: rhattox-shared-actions/shared-actions/.github/workflows/build-and-push.yaml@main
-        with:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-          GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
-          APPLICATION_VERSION: ${{ steps.get-version.outputs.version }}
-          APPLICATION_NAME: ${{ github.event.repository.name }}
+  build-and-push:
+    needs: nodejs-preflight
+    name: Build Docker Image and Push to DockerHub
+    uses: rhattox-shared-actions/shared-actions/.github/workflows/build-and-push.yaml@main
+    with:
+      APPLICATION_VERSION: ${{ needs.nodejs-preflight.outputs.APPLICATION_VERSION }}
+      APPLICATION_NAME: ${{ github.event.repository.name }}
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+      GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
