@@ -1,0 +1,56 @@
+name: Build and Push Docker Image to DockerHub
+
+on:
+  workflow_call:
+    inputs:
+      APPLICATION_VERSION:
+        required: true
+        type: string
+        description: The version of the application to deploy
+      APPLICATION_NAME:
+        required: true
+        type: string
+        description: The name of the application to deploy
+    secrets:
+      GHA_TOKEN:
+        required: true
+        description: Token to authenticate with the repository
+      DOCKER_USERNAME:
+        required: true
+        description: DockerHub username
+      DOCKER_TOKEN:
+        required: true
+        description: DockerHub token
+
+jobs:
+  build-and-push:
+    timeout-minutes: 7
+    name: Builds and Push Docker image
+    runs-on: self-hosted
+    container:
+      image: docker:28-cli
+    steps:
+      - name: Checkout Repository
+        uses: rhattox-shared-actions/shared-actions/actions/etc/checkout@main
+        with:
+          GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
+
+      - name: Login DockerHub
+        uses: rhattox-shared-actions/shared-actions/actions/docker/login@main
+        with:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build Docker image
+        uses: rhattox-shared-actions/shared-actions/actions/docker/build@main
+        with:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_IMAGE_NAME: ${{ inputs.APPLICATION_NAME }}
+          DOCKER_IMAGE_TAG: ${{ inputs.APPLICATION_VERSION }}
+
+      - name: Push Docker image
+        uses: rhattox-shared-actions/shared-actions/actions/docker/build@main
+        with:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_IMAGE_NAME: ${{ inputs.APPLICATION_NAME }}
+          DOCKER_IMAGE_TAG: ${{ inputs.APPLICATION_VERSION }}
