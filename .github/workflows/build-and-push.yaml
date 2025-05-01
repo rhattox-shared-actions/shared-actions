@@ -55,7 +55,7 @@ jobs:
           DOCKER_IMAGE_NAME: ${{ inputs.APPLICATION_NAME }}
           DOCKER_IMAGE_TAG: ${{ inputs.APPLICATION_VERSION }}
   tag-management:
-    if: github.event.pull_request.merged == true
+    if: github.ref == 'refs/heads/main'
     needs: build-and-push
     name: Build Docker Image and Push to DockerHub
     uses: rhattox-shared-actions/shared-actions/.github/workflows/github-tags.yaml@main
