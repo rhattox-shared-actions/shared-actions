@@ -31,7 +31,6 @@ jobs:
       GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
     with:
       APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
-      APPLICATION_NAME: ${{ inputs.APPLICATION_NAME }}
 
   build-and-push:
     needs: tag-management
