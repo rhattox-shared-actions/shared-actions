@@ -23,7 +23,18 @@ on:
         description: DockerHub token
 
 jobs:
+  tag-management:
+    if: github.event.pull_request.merged == true
+    name: Build Docker Image and Push to DockerHub
+    uses: rhattox-shared-actions/shared-actions/.github/workflows/github-tags.yaml@main
+    secrets:
+      GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
+    with:
+      APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
+      APPLICATION_NAME: ${{ inputs.APPLICATION_NAME }}
+
   build-and-push:
+    needs: tag-management
     timeout-minutes: 7
     name: Builds and Push Docker image
     runs-on: self-hosted

@@ -13,7 +13,7 @@ on:
         description: Token to authenticate with the repository
 
 jobs:
-  nodejs-preflight:
+  github-tag-setup:
     timeout-minutes: 10
     name: Github Tag Setup
     runs-on: self-hosted
