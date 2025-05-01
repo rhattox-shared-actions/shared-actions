@@ -13,5 +13,5 @@ runs:
         token: ${{ inputs.GHA_TOKEN }}
 
     - name: Set Git safe directory
-      shell: bash
+      shell: sh
       run: git config --global --add safe.directory "/__w/${{ github.event.repository.name }}/${{ github.event.repository.name }}"
