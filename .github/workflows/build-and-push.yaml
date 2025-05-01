@@ -33,6 +33,7 @@ jobs:
       APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
 
   build-and-push:
+    if: always()
     needs: tag-management
     timeout-minutes: 7
     name: Builds and Push Docker image
