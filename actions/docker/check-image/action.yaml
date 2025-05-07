@@ -1,0 +1,36 @@
+name: Check Docker Image
+description: Curl command to check if the Docker image exists in DockerHub
+
+inputs:
+  DOCKER_USERNAME:
+    required: true
+    description: The username for DockerHub
+  DOCKER_IMAGE_NAME:
+    required: true
+    description: The image for DockerHub
+  DOCKER_IMAGE_TAG:
+    required: true
+    description: The tag for DockerHub
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check Docker Image Exists
+      shell: sh
+      run: |
+        #!/usr/bin/env bash
+        set -euo pipefail
+        URL="https://hub.docker.com/v2/repositories/${{ inputs.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}/tags/${{ inputs.DOCKER_IMAGE_TAG }}"
+
+
+        # Get the tag status from the Docker Hub API
+        TAG_STATUS=$(curl -s "$URL" | jq -r .tag_status)
+
+        # Check if the status is "active"
+        if [ "$TAG_STATUS" == "active" ]; then
+          echo "The tag is active."
+          exit 1
+        else
+          echo "The tag is not active or does not exist."
+          exit 0
+        fi
