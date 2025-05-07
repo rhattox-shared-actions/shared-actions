@@ -16,7 +16,7 @@ runs:
   using: "composite"
   steps:
     - name: Check Docker Image Exists
-      shell: sh
+      shell: bash
       run: |
         #!/usr/bin/env bash
         set -euo pipefail
