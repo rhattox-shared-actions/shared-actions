@@ -54,6 +54,17 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_IMAGE_NAME: ${{ inputs.APPLICATION_NAME }}
           DOCKER_IMAGE_TAG: ${{ inputs.APPLICATION_VERSION }}
+
+  deploy-argocd:
+    if: startsWith(github.ref, 'refs/heads/feature/')
+    needs: build-and-push
+    name: Deploy version to ArgoCD
+    uses: rhattox-shared-actions/shared-actions/.github/workflows/github-tags.yaml@main
+    secrets:
+      GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
+    with:
+      APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
+
   tag-management:
     if: github.ref == 'refs/heads/main'
     needs: build-and-push
