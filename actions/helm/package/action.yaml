@@ -1,0 +1,21 @@
+name: Package Helm Chart
+description: Package a Helm chart
+
+inputs:
+  HELM_CHART_PATH:
+    description: The path to the Helm chart - file not included
+    required: true
+    default: ./
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get NodeJs App Version
+      id: get-version
+      shell: bash
+      run: |
+        #!/usr/bin/env bash
+        set -euo pipefail
+
+        mkdir -p packaged
+        helm package ${{ inputs.HELM_CHART_PATH }} --destination packaged

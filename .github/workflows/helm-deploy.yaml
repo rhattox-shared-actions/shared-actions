@@ -1,0 +1,80 @@
+name: Helm Chart CI/CD
+
+on:
+  workflow_call:
+    inputs:
+      HELM_CHART_PATH:
+        type: string
+        required: true
+    secrets:
+      GHA_TOKEN:
+        required: true
+        description: Token to authenticate with the repository
+
+jobs:
+  helm-package:
+    timeout-minutes: 10
+    name: Helm Package
+    runs-on: self-hosted
+    container:
+      image: bcovies/helm-toolbox:0.0.1
+
+    steps:
+      - name: Checkout Repository
+        uses: rhattox-shared-actions/shared-actions/actions/git/checkout@main
+        with:
+          GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
+
+      - name: Helm lint
+        uses: rhattox-shared-actions/shared-actions/actions/helm/lint@main
+        with:
+          HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
+
+      - name: Helm lint
+        uses: rhattox-shared-actions/shared-actions/actions/helm/package@main
+        with:
+          HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
+
+      - name: Upload to github
+        uses: rhattox-shared-actions/shared-actions/actions/git/checkout@main
+        with:
+          ARTIFACT_NAME: packaged-charts
+          ARTIFACT_PATH: packaged
+
+  # helm-deploy:
+  #   needs: helm-package
+  #   timeout-minutes: 10
+  #   name: Helm Deploy
+  #   runs-on: self-hosted
+  #   container:
+  #     image: bcovies/helm-toolbox:0.0.1
+
+  #   steps:
+  #     - name: Checkout gh-pages branch
+  #       uses: actions/checkout@v3
+  #       with:
+  #         ref: gh-pages
+  #         path: gh-pages
+  #         token: ${{ secrets.GHA_TOKEN }}
+
+  #     - name: Download chart artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: packaged-charts
+  #         path: new-charts
+
+  #     - name: Update Helm repo index
+  #       run: |
+  #         cd gh-pages
+  #         cp ../new-charts/*.tgz .
+  #         helm repo index . --url https://rhattox-helm-charts.github.io/persistent-volume
+  #         cd ..
+
+  #     - name: Commit and push to gh-pages
+  #       run: |
+  #         cd gh-pages
+  #         git config user.name "github-actions"
+  #         git config user.email "github-actions@github.com"
+  #         git add .
+  #         git commit -m "Update Helm charts" || echo "No changes to commit"
+  #         git push

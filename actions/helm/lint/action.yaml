@@ -1,0 +1,19 @@
+name: Lint Helm Chart
+description: Lint a Helm chart
+
+inputs:
+  HELM_CHART_PATH:
+    description: The path to the Helm chart - file not included
+    required: true
+    default: ./
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get NodeJs App Version
+      id: get-version
+      shell: bash
+      run: |
+        #!/usr/bin/env bash
+        set -euo pipefail
+        helm lint ${{ inputs.HELM_CHART_PATH }}
