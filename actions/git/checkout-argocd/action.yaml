@@ -1,0 +1,19 @@
+name: Checkout Argocd
+description: Check out a repository for argocd - helm
+inputs:
+  GHA_TOKEN:
+    description: Token to authenticate with the repository
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: "${{ github.repository }}-helm"
+        ref: "main"
+        token: ${{ inputs.GHA_TOKEN }}
+
+    - name: Set Git safe directory
+      shell: sh
+      run: git config --global --add safe.directory "/__w/${{ github.event.repository.name }}/${{ github.event.repository.name }}"

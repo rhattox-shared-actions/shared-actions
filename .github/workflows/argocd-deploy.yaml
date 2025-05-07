@@ -21,7 +21,7 @@ jobs:
       image: bcovies/toolbox:0.0.3
     steps:
       - name: Checkout Repository
-        uses: rhattox-shared-actions/shared-actions/actions/git/checkout@main
+        uses: rhattox-shared-actions/shared-actions/actions/git/checkout-argocd@main
         with:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
 
