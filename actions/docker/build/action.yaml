@@ -24,4 +24,4 @@ runs:
       run: |
         #!/usr/bin/env bash
         set -euo pipefail
-        docker build -t ${{ inputs.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ inputs.DOCKER_IMAGE_TAG }}  ${{ inputs.DOCKERFILE_PATH }}
+        docker build --no-cache -t ${{ inputs.DOCKER_USERNAME }}/${{ inputs.DOCKER_IMAGE_NAME }}:${{ inputs.DOCKER_IMAGE_TAG }}  ${{ inputs.DOCKERFILE_PATH }}
