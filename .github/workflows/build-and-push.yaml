@@ -59,7 +59,7 @@ jobs:
     if: startsWith(github.ref, 'refs/heads/feature/')
     needs: build-and-push
     name: Deploy version to ArgoCD
-    uses: rhattox-shared-actions/shared-actions/.github/workflows/github-tags.yaml@main
+    uses: rhattox-shared-actions/shared-actions/.github/workflows/argocd-deploy.yaml@main
     secrets:
       GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
     with:
@@ -67,8 +67,8 @@ jobs:
 
   tag-management:
     if: github.ref == 'refs/heads/main'
-    needs: build-and-push
-    name: Build Docker Image and Push to DockerHub
+    needs: [build-and-push, deploy-argocd]
+    name: Create Github Tag
     uses: rhattox-shared-actions/shared-actions/.github/workflows/github-tags.yaml@main
     secrets:
       GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
