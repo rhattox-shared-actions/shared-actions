@@ -18,7 +18,7 @@ jobs:
     name: Github Tag Setup
     runs-on: self-hosted
     container:
-      image: bcovies/toolbox:0.0.1
+      image: bcovies/toolbox:0.0.3
 
     steps:
       - name: Checkout Repository
