@@ -45,6 +45,13 @@ jobs:
         id: get-application-name
         uses: rhattox-shared-actions/shared-actions/actions/etc/get-repository-name@main
 
+      - name: Check if Docker image already exists
+        uses: rhattox-shared-actions/shared-actions/actions/docker/check-image@main
+        with:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_IMAGE_NAME: ${{ steps.get-application-version.outputs.APPLICATION_NAME }}
+          DOCKER_IMAGE_TAG: ${{ steps.get-application-version.outputs.APPLICATION_VERSION }}
+
   build-and-push:
     needs: nodejs-preflight
     name: Build Docker Image and Push to DockerHub

@@ -41,13 +41,6 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Check if Docker image already exists
-        uses: rhattox-shared-actions/shared-actions/actions/docker/check-image@main
-        with:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_IMAGE_NAME: ${{ inputs.APPLICATION_NAME }}
-          DOCKER_IMAGE_TAG: ${{ inputs.APPLICATION_VERSION }}
-
       - name: Build Docker image
         uses: rhattox-shared-actions/shared-actions/actions/docker/build@main
         with:
