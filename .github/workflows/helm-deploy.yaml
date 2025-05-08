@@ -34,29 +34,36 @@ jobs:
         with:
           HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
 
-      - name: Helm Package
-        uses: rhattox-shared-actions/shared-actions/actions/helm/package@main
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
         with:
-          HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
+          charts_dir: ${{ inputs.HELM_CHART_PATH }}
+        env:
+          CR_TOKEN: "${{ secrets.GHA_TOKEN }}"
 
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.GITHUB_PAGES_BRANCH }}
-          path: ${{ inputs.GITHUB_PAGES_BRANCH }}
-          token: ${{ secrets.GHA_TOKEN }}
+      # - name: Helm Package
+      #   uses: rhattox-shared-actions/shared-actions/actions/helm/package@main
+      #   with:
+      #     HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
 
-      - name: Update Helm repo index
-        run: |
-          cd gh-pages
-          cp ../packaged/*.tgz .
-          helm repo index . --url https://rhattox-helm-charts.github.io/${{ github.repository }}
+      # - name: Checkout gh-pages branch
+      #   uses: actions/checkout@v4
+      #   with:
+      #     ref: ${{ inputs.GITHUB_PAGES_BRANCH }}
+      #     path: ${{ inputs.GITHUB_PAGES_BRANCH }}
+      #     token: ${{ secrets.GHA_TOKEN }}
 
-      - name: Commit and push to gh-pages
-        run: |
-          cd gh-pages
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add .
-          git commit -m "Update Helm charts" || echo "No changes to commit"
-          git push
+      # - name: Update Helm repo index
+      #   run: |
+      #     cd gh-pages
+      #     cp ../packaged/*.tgz .
+      #     helm repo index . --url https://rhattox-helm-charts.github.io/${{ github.repository }}
+
+      # - name: Commit and push to gh-pages
+      #   run: |
+      #     cd gh-pages
+      #     git config user.name "github-actions"
+      #     git config user.email "github-actions@github.com"
+      #     git add .
+      #     git commit -m "Update Helm charts" || echo "No changes to commit"
+      #     git push
