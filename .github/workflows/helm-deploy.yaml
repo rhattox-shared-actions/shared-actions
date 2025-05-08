@@ -21,7 +21,7 @@ jobs:
     name: Helm Package
     runs-on: self-hosted
     container:
-      image: bcovies/helm-toolbox:0.0.1
+      image: bcovies/helm-toolbox:0.0.2
 
     steps:
       - name: Checkout Repository
