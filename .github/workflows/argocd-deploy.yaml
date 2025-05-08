@@ -18,7 +18,7 @@ jobs:
     name: Deploy version to ArgoCD
     runs-on: self-hosted
     container:
-      image: bcovies/toolbox:0.0.3
+      image: bcovies/debian-toolbox:0.0.3
     steps:
       - name: Checkout Repository
         uses: rhattox-shared-actions/shared-actions/actions/git/checkout-argocd@main

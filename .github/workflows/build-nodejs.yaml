@@ -25,7 +25,7 @@ jobs:
     name: Preflight Build for NodeJS
     runs-on: self-hosted
     container:
-      image: bcovies/toolbox:0.0.3
+      image: bcovies/debian-toolbox:0.0.3
     outputs:
       APPLICATION_VERSION: ${{ steps.get-application-version.outputs.VERSION }}
       APPLICATION_NAME: ${{ steps.get-application-name.outputs.NAME }}
