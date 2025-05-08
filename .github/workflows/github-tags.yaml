@@ -14,7 +14,7 @@ on:
 
 jobs:
   github-tag-setup:
-    timeout-minutes: 10
+    timeout-minutes: 1
     name: Github Tag Setup
     runs-on: self-hosted
     container:
@@ -22,24 +22,110 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: rhattox-shared-actions/shared-actions/actions/git/checkout@main
+        uses: rhattox-shared-actions/shared-actions/actions/git/checkout-extra@main
         with:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
+          GHA_BRANCH: main
+          GHA_REPOSITORY: ${{ github.event.repository.name }}
 
-      - name: Get Git Tag
-        id: git-get-tag
-        uses: rhattox-shared-actions/shared-actions/actions/git/list-tag@main
+      - name: Check if git-tag branch exists
+        id: check_branch
+        shell: bash
+        run: |
+          git fetch --all
+          if git branch -r | grep -q "origin/git-tag"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Compute Git Tag
-        uses: rhattox-shared-actions/shared-actions/actions/git/compute-tag@main
-        with:
-          APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
-          GIT_TAG_LIST: ${{ steps.git-get-tag.outputs.GIT_TAG_LIST }}
+      - name: Run step if branch does NOT exist
+        if: steps.check_branch.outputs.exists == 'false'
+        run: |
+          echo "Branch does not exist."
+          git checkout -b git-tag
+          echo "0.0.1" > version.txt
+          git add version.txt
+          git commit -m "Create version file"
+          git push origin git-tag
+          echo "Branch created and pushed."
 
-      - name: Create Git Tag
-        uses: rhattox-shared-actions/shared-actions/actions/git/create-tag@main
-        with:
-          APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
+      - name: Bump version based on commit message
+        if: steps.check_branch.outputs.exists == 'true'
+        id: version_bump
+        shell: bash
+        run: |
+          set -e
 
-      - name: Delete Git Tag
-        uses: rhattox-shared-actions/shared-actions/actions/git/delete-tag@main
+          VERSION_FILE="version.txt"
+
+          if [[ ! -f "$VERSION_FILE" ]]; then
+            echo "❌ Error: $VERSION_FILE not found."
+            exit 1
+          fi
+
+          CURRENT_VERSION=$(cat "$VERSION_FILE")
+          if ! [[ "$CURRENT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Error: Invalid version format in $VERSION_FILE"
+            exit 1
+          fi
+
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+          COMMIT_MSG_LOWER=$(echo "$COMMIT_MSG" | tr '[:upper:]' '[:lower:]')
+
+          if echo "$COMMIT_MSG" | grep -qE 'BREAKING CHANGE|!'; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+            VERSION_TYPE="major"
+          elif echo "$COMMIT_MSG_LOWER" | grep -qE '\b(feat|feature)\b'; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+            VERSION_TYPE="minor"
+          else
+            PATCH=$((PATCH + 1))
+            VERSION_TYPE="patch"
+          fi
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+
+          # Save to GITHUB_OUTPUT
+          echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "version_type=$VERSION_TYPE" >> "$GITHUB_OUTPUT"
+
+          # Also update the file (optional — needed if you're going to commit it)
+          echo "$NEW_VERSION" > "$VERSION_FILE"
+
+      - name: Commit new version
+        if: steps.version_bump.outputs.new_version != ''
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add version.txt
+          git commit -m "chore: bump version to ${{ steps.version_bump.outputs.new_version }}"
+          git push origin HEAD
+
+      - name: Create tag
+        if: steps.version_bump.outputs.new_version != ''
+        run: |
+          git tag "v${{ steps.version_bump.outputs.new_version }}"
+          git push origin "v${{ steps.version_bump.outputs.new_version }}"
+
+      # - name: Get Git Tag
+      #   id: git-get-tag
+      #   uses: rhattox-shared-actions/shared-actions/actions/git/list-tag@main
+
+      # - name: Compute Git Tag
+      #   uses: rhattox-shared-actions/shared-actions/actions/git/compute-tag@main
+      #   with:
+      #     APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
+      #     GIT_TAG_LIST: ${{ steps.git-get-tag.outputs.GIT_TAG_LIST }}
+
+      # - name: Create Git Tag
+      #   uses: rhattox-shared-actions/shared-actions/actions/git/create-tag@main
+      #   with:
+      #     APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
+
+      # - name: Delete Git Tag
+      #   uses: rhattox-shared-actions/shared-actions/actions/git/delete-tag@main

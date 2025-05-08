@@ -9,9 +9,8 @@ inputs:
     required: true
     default: main
   GHA_REPOSITORY:
-    description: Branch to checkout
+    description: Repository to checkout
     required: true
-    default: main
 
 runs:
   using: "composite"
