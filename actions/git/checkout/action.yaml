@@ -1,8 +1,15 @@
-name: Checkout
-description: Check out a repository
+name: Checkout Extra with Git Branch, Git Token and Github Repository
+description: Checkout a Git repository with a specific branch and token
 inputs:
   GHA_TOKEN:
     description: Token to authenticate with the repository
+    required: true
+  GHA_BRANCH:
+    description: Branch to checkout
+    required: true
+    default: main
+  GHA_REPOSITORY:
+    description: Repository to checkout
     required: true
 
 runs:
@@ -10,6 +17,8 @@ runs:
   steps:
     - uses: actions/checkout@v4
       with:
+        repository: "${{ inputs.GHA_REPOSITORY }}"
+        ref: "${{ inputs.GHA_BRANCH }}"
         token: ${{ inputs.GHA_TOKEN }}
 
     - name: Set Git safe directory

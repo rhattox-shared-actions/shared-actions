@@ -34,6 +34,8 @@ jobs:
         uses: rhattox-shared-actions/shared-actions/actions/git/checkout@main
         with:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
+          GHA_REPOSITORY: ${{ github.event.repository.name }}
+          GHA_BRANCH: main
 
       - name: Get Node Package.json Version
         id: get-application-version
