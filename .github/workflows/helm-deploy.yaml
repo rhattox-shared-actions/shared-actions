@@ -36,6 +36,19 @@ jobs:
         with:
           HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
 
+      - name: Set up Git config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get current date for tag
+        run: echo "TAG_NAME=v$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
+      - name: Create and push tag
+        run: |
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
         with:
