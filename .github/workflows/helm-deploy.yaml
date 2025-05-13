@@ -62,6 +62,11 @@ jobs:
           HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
           APPLICATION_VERSION: ${{ needs.helm-preflight.outputs.APPLICATION_VERSION }}
 
+      - name: Create Git Tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
         with:
