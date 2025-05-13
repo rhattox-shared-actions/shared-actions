@@ -1,0 +1,29 @@
+name: Get Helm Chart Version
+description: Get a Helm chart Version
+
+outputs:
+  APPLICATION_VERSION:
+    value: ${{ steps.get-version.outputs.APPLICATION_VERSION }}
+    description: The version of the application to deploy
+
+inputs:
+  HELM_CHART_PATH:
+    description: The path to the Helm chart - file not included
+    required: true
+    default: ./
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get Helm Chart Version
+      id: get-version
+      shell: bash
+      run: |
+        #!/usr/bin/env bash
+        set -euo pipefail
+
+        # Get the version from the Chart.yaml file
+        VERSION=$(yq -r '.appVersion' ${{ inputs.HELM_CHART_PATH }}/Chart.yaml)
+
+        echo "APPLICATION_VERSION=${VERSION}"
+        echo "APPLICATION_VERSION=${VERSION}" >> $GITHUB_OUTPUT

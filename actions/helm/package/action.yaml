@@ -6,6 +6,9 @@ inputs:
     description: The path to the Helm chart - file not included
     required: true
     default: ./
+  APPLICATION_VERSION:
+    description: The version of the application to deploy
+    required: true
 
 runs:
   using: "composite"
@@ -17,5 +20,6 @@ runs:
         #!/usr/bin/env bash
         set -euo pipefail
 
-        mkdir -p packaged
-        helm package ${{ inputs.HELM_CHART_PATH }} --destination packaged
+        rm -rf .cr-release-packages
+        mkdir -p .cr-release-packages
+        helm package ${{ inputs.HELM_CHART_PATH }} --app-version=${{ inputs.APPLICATION_VERSION }}  --version=${{ inputs.APPLICATION_VERSION }} --destination .cr-release-packages
