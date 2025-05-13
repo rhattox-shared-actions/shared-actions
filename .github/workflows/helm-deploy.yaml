@@ -33,10 +33,17 @@ jobs:
         with:
           HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
 
+      - name: Helm Get Version
+        id: get-version
+        uses: rhattox-shared-actions/shared-actions/actions/helm/get-version@main
+        with:
+          HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
+
       - name: Helm Package
         uses: rhattox-shared-actions/shared-actions/actions/helm/package@main
         with:
           HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
+          APPLICATION_VERSION: ${{ steps.get-version.outputs.APPLICATION_VERSION }}
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
