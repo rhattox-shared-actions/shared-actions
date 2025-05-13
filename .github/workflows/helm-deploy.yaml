@@ -12,7 +12,31 @@ on:
         description: Token to authenticate with the repository
 
 jobs:
+  helm-preflight:
+    timeout-minutes: 10
+    name: Helm preflight
+    runs-on: self-hosted
+    container:
+      image: bcovies/debian-toolbox:0.0.1
+    outputs:
+      APPLICATION_VERSION: ${{ steps.get-version.outputs.APPLICATION_VERSION }}
+
+    steps:
+      - name: Checkout Repository
+        uses: rhattox-shared-actions/shared-actions/actions/git/checkout@main
+        with:
+          GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
+          GHA_REPOSITORY: ${{ github.repository }}
+          GHA_BRANCH: main
+
+      - name: Helm Get Version
+        id: get-version
+        uses: rhattox-shared-actions/shared-actions/actions/helm/get-version@main
+        with:
+          HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
+
   helm-package:
+    needs: helm-preflight
     timeout-minutes: 10
     name: Helm Package
     runs-on: self-hosted
@@ -32,17 +56,11 @@ jobs:
         with:
           HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
 
-      - name: Helm Get Version
-        id: get-version
-        uses: rhattox-shared-actions/shared-actions/actions/helm/get-version@main
-        with:
-          HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
-
       - name: Helm Package
         uses: rhattox-shared-actions/shared-actions/actions/helm/package@main
         with:
           HELM_CHART_PATH: ${{ inputs.HELM_CHART_PATH }}
-          APPLICATION_VERSION: ${{ steps.get-version.outputs.APPLICATION_VERSION }}
+          APPLICATION_VERSION: ${{ needs.helm-preflight.outputs.APPLICATION_VERSION }}
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
