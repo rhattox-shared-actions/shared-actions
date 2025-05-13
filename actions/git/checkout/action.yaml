@@ -20,6 +20,9 @@ runs:
         repository: "${{ inputs.GHA_REPOSITORY }}"
         ref: "${{ inputs.GHA_BRANCH }}"
         token: ${{ inputs.GHA_TOKEN }}
+        fetch-depth: 0
+        fetch-tags: true
+        set-safe-directory: true
 
     - name: Set Git safe directory
       shell: sh
