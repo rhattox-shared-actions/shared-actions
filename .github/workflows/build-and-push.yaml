@@ -29,6 +29,8 @@ on:
 
 jobs:
   convert-version:
+    if: |
+      github.ref != 'refs/heads/main'
     timeout-minutes: 1
     name: Convert version to tag
     runs-on: self-hosted
@@ -51,8 +53,7 @@ jobs:
   build-and-push:
     needs: convert-version
     if: |
-      startsWith(github.ref, 'refs/heads/feature/') ||
-      startsWith(github.ref, 'refs/tags/')
+      github.ref != 'refs/heads/main'
     timeout-minutes: 7
     name: Builds and Push Docker image
     runs-on: self-hosted
