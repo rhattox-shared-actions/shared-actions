@@ -67,5 +67,6 @@ jobs:
         with:
           skip_packaging: true
           charts_dir: ${{ inputs.HELM_CHART_PATH }}
+          pages_branch: main
         env:
           CR_TOKEN: "${{ secrets.GHA_TOKEN }}"
