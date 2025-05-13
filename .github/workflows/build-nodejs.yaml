@@ -8,6 +8,11 @@ on:
         description: Path to the package.json file - file not included
         type: string
         default: ./
+      GHA_BRANCH:
+        required: false
+        type: string
+        description: The branch to checkout
+        default: main
     secrets:
       GHA_TOKEN:
         required: true
@@ -35,7 +40,7 @@ jobs:
         with:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
           GHA_REPOSITORY: ${{ github.repository }}
-          GHA_BRANCH: main
+          GHA_BRANCH: ${{ inputs.GHA_BRANCH }}
 
       - name: Get Node Package.json Version
         id: get-application-version
@@ -61,6 +66,7 @@ jobs:
     with:
       APPLICATION_VERSION: ${{ needs.nodejs-preflight.outputs.APPLICATION_VERSION }}
       APPLICATION_NAME: ${{ needs.nodejs-preflight.outputs.APPLICATION_NAME }}
+      GHA_BRANCH: ${{ inputs.GHA_BRANCH }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}

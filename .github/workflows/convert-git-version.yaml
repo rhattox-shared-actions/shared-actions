@@ -7,25 +7,6 @@ on:
         required: true
         type: string
         description: The version of the application to deploy
-      APPLICATION_NAME:
-        required: true
-        type: string
-        description: The name of the application to deploy
-      GHA_BRANCH:
-        required: false
-        type: string
-        description: The branch to checkout
-        default: main
-    secrets:
-      GHA_TOKEN:
-        required: true
-        description: Token to authenticate with the repository
-      DOCKER_USERNAME:
-        required: true
-        description: DockerHub username
-      DOCKER_TOKEN:
-        required: true
-        description: DockerHub token
 
 jobs:
   convert-version:
@@ -34,19 +15,9 @@ jobs:
     runs-on: self-hosted
     container:
       image: bcovies/helm-toolbox:0.0.3
-    outputs:
-      APPLICATION_VERSION: ${{ steps.set-version.outputs.APPLICATION_VERSION }}
     steps:
       - name: Set version to tag
-        id: set-version
-        run: |
-          if [[ "${GITHUB_REF}" == refs/heads/feature/* ]]; then
-            echo "APPLICATION_VERSION=${{ inputs.APPLICATION_VERSION }}-${{ github.ref_name }}-${{ github.sha }}"
-            echo "APPLICATION_VERSION=${{ inputs.APPLICATION_VERSION }}-${{ github.ref_name }}-${{ github.sha }}" >> $GITHUB_OUTPUT
-          else
-            echo "APPLICATION_VERSION=${{ inputs.APPLICATION_VERSION }}" 
-            echo "APPLICATION_VERSION=${{ inputs.APPLICATION_VERSION }}" >> $GITHUB_OUTPUT
-          fi
+        run: echo "APPLICATION_VERSION=${{ inputs.APPLICATION_VERSION }}" >> $GITHUB_ENV
 
   build-and-push:
     needs: convert-version
@@ -64,7 +35,7 @@ jobs:
         with:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
           GHA_REPOSITORY: ${{ github.repository }}
-          GHA_BRANCH: ${{ inputs.GHA_BRANCH }}
+          GHA_BRANCH: main
 
       - name: Login DockerHub
         uses: rhattox-shared-actions/shared-actions/actions/docker/login@main
@@ -77,14 +48,14 @@ jobs:
         with:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_IMAGE_NAME: ${{ inputs.APPLICATION_NAME }}
-          DOCKER_IMAGE_TAG: ${{ needs.convert-version.outputs.APPLICATION_VERSION }}
+          DOCKER_IMAGE_TAG: ${{ inputs.APPLICATION_VERSION }}
 
       - name: Push Docker image
         uses: rhattox-shared-actions/shared-actions/actions/docker/push@main
         with:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_IMAGE_NAME: ${{ inputs.APPLICATION_NAME }}
-          DOCKER_IMAGE_TAG: ${{ needs.convert-version.outputs.APPLICATION_VERSION }}
+          DOCKER_IMAGE_TAG: ${{ inputs.APPLICATION_VERSION }}
 
   deploy-argocd:
     needs: [build-and-push, convert-version]
@@ -95,5 +66,4 @@ jobs:
     secrets:
       GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
     with:
-      APPLICATION_VERSION: ${{ needs.convert-version.outputs.APPLICATION_VERSION }}
-      GHA_BRANCH: ${{ inputs.GHA_BRANCH }}
+      APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}

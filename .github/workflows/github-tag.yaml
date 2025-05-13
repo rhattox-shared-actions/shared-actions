@@ -3,8 +3,8 @@ name: Create Git Tag
 on:
   workflow_call:
     inputs:
-      version:
-        description: "Version tag to create (e.g., v1.2.3)"
+      APPLICATION_VERSION:
+        description: "APPLICATION_VERSION tag to create (e.g., v1.2.3)"
         required: true
         type: string
     secrets:
@@ -31,18 +31,18 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag ${{ inputs.version }}
-          git push origin ${{ inputs.version }}
+          git tag ${{ inputs.APPLICATION_VERSION }}
+          git push origin ${{ inputs.APPLICATION_VERSION }}
 
       - name: Zip source code
         run: |
-          zip -r source-code-${{ inputs.version }}.zip . -x '.git/*'
+          zip -r source-code-${{ inputs.APPLICATION_VERSION }}.zip . -x '.git/*'
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.version }}
-          name: Release ${{ inputs.version }}
-          files: source-code-${{ inputs.version }}.zip
+          tag_name: ${{ inputs.APPLICATION_VERSION }}
+          name: Release ${{ inputs.APPLICATION_VERSION }}
+          files: source-code-${{ inputs.APPLICATION_VERSION }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GHA_TOKEN }}

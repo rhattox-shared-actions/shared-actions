@@ -7,6 +7,11 @@ on:
         required: true
         type: string
         description: The version of the application to deploy
+      GHA_BRANCH:
+        required: false
+        type: string
+        description: The branch to checkout
+        default: main
     secrets:
       GHA_TOKEN:
         required: true
@@ -25,7 +30,7 @@ jobs:
         with:
           GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
           GHA_REPOSITORY: ${{ github.repository }}-helm
-          GHA_BRANCH: main
+          GHA_BRANCH: ${{ inputs.GHA_BRANCH }}
 
       - name: Commit Version and Push Changes
         uses: rhattox-shared-actions/shared-actions/actions/etc/argocd/deploy-new-image@main
