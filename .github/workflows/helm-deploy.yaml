@@ -13,7 +13,6 @@ on:
 
 jobs:
   helm-package:
-    if: startsWith(github.ref, 'refs/tags/')
     timeout-minutes: 10
     name: Helm Package
     runs-on: self-hosted
