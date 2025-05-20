@@ -1,13 +1,14 @@
 name: Upload Artifact
+description: Upload an artifact to the workflow run
+
 inputs:
   ARTIFACT_NAME:
-    type: string
     description: The name of the artifact
     required: true
   ARTIFACT_PATH:
-    type: string
     description: The path of the artifact
     required: true
+
 runs:
   using: "composite"
   steps:

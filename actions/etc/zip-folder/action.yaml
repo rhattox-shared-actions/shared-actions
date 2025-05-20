@@ -1,0 +1,22 @@
+name: Zip folder
+description: Zip a folder
+
+inputs:
+  ARTIFACT_NAME:
+    description: "Application name to use in the zip file"
+    required: true
+  ARTIFACT_PATH:
+    description: "Path to the folder to zip"
+    required: true
+  ZIP_EXTRA_ARGS:
+    description: "Extra arguments to pass to the zip command"
+    required: false
+    default: "-x '.git/*'"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Zip Source Code
+      shell: bash
+      run: |
+        zip -r source-code-${{ inputs.ARTIFACT_NAME }}.zip ${{ inputs.ARTIFACT_PATH }} ${{ inputs.ZIP_EXTRA_ARGS }}

@@ -28,12 +28,19 @@ jobs:
           GHA_REPOSITORY: ${{ github.repository }}
           GHA_BRANCH: main
 
+      - name: Configure Git User
+        uses: rhattox-shared-actions/shared-actions/actions/git/configure-user@main
+
       - name: Create Git Tag
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag ${{ inputs.APPLICATION_VERSION }}
-          git push origin ${{ inputs.APPLICATION_VERSION }}
+        uses: rhattox-shared-actions/shared-actions/actions/git/create-tag@main
+        with:
+          APPLICATION_VERSION: ${{ inputs.APPLICATION_VERSION }}
+
+      - name: Zip Source Code
+        uses: rhattox-shared-actions/shared-actions/actions/etc/zip-folder@main
+        with:
+          ARTIFACT_PATH: "./"
+          ARTIFACT_NAME: ${{ inputs.APPLICATION_VERSION }}
 
       - name: Zip source code
         run: |

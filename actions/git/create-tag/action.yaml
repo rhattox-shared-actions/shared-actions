@@ -1,0 +1,16 @@
+name: Create Git Tag and Push to Remote
+description: Create Git Tag and Push to Remote
+
+inputs:
+  APPLICATION_VERSION:
+    description: "Application Version tag to create (e.g., v1.2.3)"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure Git Tag
+      shell: bash
+      run: |
+        git tag ${{ inputs.APPLICATION_VERSION }}
+        git push origin ${{ inputs.APPLICATION_VERSION }}
