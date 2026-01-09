@@ -11,6 +11,9 @@ on:
         required: true
         description: Token to authenticate with the repository
 
+permissions:
+  contents: write
+
 jobs:
   helm-preflight:
     timeout-minutes: 10
