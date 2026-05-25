@@ -1,0 +1,27 @@
+name: Java Installer
+description: Check for the java version and if it's correct install it
+
+runs:
+  using: composite
+  steps:
+    - name: Get java Version
+      id: get-java-version
+      shell: bash
+      run: |-
+        #Debug
+        java_version="$(cat .java)"
+
+        if [[ $java_version =~ "^([a-zA-Z-]+)-([0-9]+\.[0-9]+\.[0-9]+)$" ]]; then
+          echo "distribution=${java_version[1]}" >> $GITHUB_OUTPUT
+          echo "java-version=${java_version[2]}" >> $GITHUB_OUTPUT
+        else
+          echo "Error: string error."
+          echo "Version = ${java_version}"
+          exit 1
+        fi
+
+    - name: Install java
+      uses: rhattox-shared-actions/shared-actions/actions/tools/java/setup-java@main
+      with:
+        distribution: ${{ steps.get-java-version.outputs.distribution }}
+        java-version: ${{ steps.get-java-version.outputs.java-version }}
