@@ -40,7 +40,7 @@ runs:
       shell: bash
       run: |-
         #Debug
-        maven_version="$(cat .maven-version)"
+        maven_version="$(cat .maven)"
         echo "MAVEN VERSION = ${maven_version}"
 
         echo "maven-version=${maven_version}" >> $GITHUB_OUTPUT
