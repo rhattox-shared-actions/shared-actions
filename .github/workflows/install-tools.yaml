@@ -1,0 +1,12 @@
+name: "Install Build Tools"
+description:  "testing tools"
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - id: test_tool
+        uses: rhattox-shared-actions/shared-actions/.github/actions/tools@main

@@ -1,0 +1,34 @@
+name: "Install Build Tools"
+description: "Install build tools"
+
+outputs:
+  languages:
+    description: 'The languages to install'
+    value: ${{ steps.language.outputs.greeting }}
+
+runs:
+  using: composite
+  steps:
+    - name: Check for dotfile with the desired language
+      id: language
+      shell: bash
+      run: |
+        # Maven
+        if [ -f .maven ]; then
+          echo "maven installation requested"
+        fi
+
+        # Java
+        if [ -f .java ]; then
+          echo "java installation requested"
+        fi
+
+        # Node
+        if [ -f .node ]; then
+          echo "node installation requested"
+        fi
+        
+        # Python
+        if [ -f .python ]; then
+          echo "python installation requested"
+        fi
