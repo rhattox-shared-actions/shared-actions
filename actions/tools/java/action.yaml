@@ -13,7 +13,9 @@ runs:
 
         if [[ $java_version =~ ^([a-zA-Z-]+)-([0-9]{1,2})$ ]]; then
           echo "distribution=${java_version[1]}" >> $GITHUB_OUTPUT
+          echo "distribution=${java_version[1]}" 
           echo "java-version=${java_version[2]}" >> $GITHUB_OUTPUT
+          echo "java-version=${java_version[2]}" 
         else
           echo "Error: string error."
           echo "${java_version}"
