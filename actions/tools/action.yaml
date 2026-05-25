@@ -1,58 +1,19 @@
 name: "Install Build Tools"
-description: "Install build tools"
-
-outputs:
-  languages:
-    description: "The languages to install"
-    value: ${{ steps.language.outputs.greeting }}
+description: |
+  Search for the dotfile and install it
+  Available languages:
+    - maven
+    - java
+    - node
+    - python
 
 runs:
   using: composite
   steps:
-    - name: Check for dotfile with the desired language
-      id: check-install-tools
-      shell: bash
-      run: |-
-        # Maven
-        if [ -f .maven ]; then
-          echo "maven installation requested"
-          echo "maven=true" >> $GITHUB_OUTPUT
-        fi
-
-        # Java
-        if [ -f .java ]; then
-          echo "java installation requested"
-        fi
-
-        # Node
-        if [ -f .node ]; then
-          echo "node installation requested"
-        fi
-
-        # Python
-        if [ -f .python ]; then
-          echo "python installation requested"
-        fi
-
-    - name: Get Maven Version
-      id: get-maven-version
-      if: steps.check-install-tools.outputs.maven == 'true'
-      shell: bash
-      run: |-
-        #Debug
-        maven_version="$(cat .maven)"
-
-        if [[ $maven_version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-          echo "maven-version=${maven_version}" >> $GITHUB_OUTPUT
-        else
-          echo "Error: Maven version not allowed."
-          echo "Version = ${maven_version}"
-          exit 1
-        fi
+    - name: Check dotfile
+      id: check-dotfile-lang
+      uses: rhattox-shared-actions/shared-actions/actions/tools/dotfile@main
 
     - name: Install Maven
-      id: install-maven
-      if: steps.check-install-tools.outputs.maven == 'true'
+      if: steps.check-dotfile-lang.outputs.maven == 'true'
       uses: rhattox-shared-actions/shared-actions/actions/tools/maven@main
-      with:
-        maven-version: ${{ steps.get-maven-version.outputs.maven-version }}

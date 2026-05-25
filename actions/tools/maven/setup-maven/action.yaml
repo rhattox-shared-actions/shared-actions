@@ -1,0 +1,15 @@
+name: Maven Installer
+description: Maven central Installer
+
+inputs:
+  maven-version:
+    required: true
+    description: maven version
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v5
+      with:
+        maven-version: ${{ inputs.maven-version }}

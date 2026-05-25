@@ -1,0 +1,47 @@
+name: Dotfile Checker
+description: Check for existing dotfile and exports the lang to install
+
+outputs:
+  maven:
+    description: set either true of false for maven
+    value: ${{ steps.check-dotfiles.outputs.maven }}
+  java:
+    description: set either true of false for java
+    value: ${{ steps.check-dotfiles.outputs.java }}
+  node:
+    description: set either true of false for node
+    value: ${{ steps.check-dotfiles.outputs.node }}
+  python:
+    description: set either true of false for python
+    value: ${{ steps.check-dotfiles.outputs.python }}
+    
+runs:
+  using: composite
+  steps:
+    - name: Find dotfiles
+      id: check-dotfiles
+      shell: bash
+      run: |-
+        # Maven
+        if [ -f .maven ]; then
+          echo "maven installation requested"
+          echo "maven=true" >> $GITHUB_OUTPUT
+        fi
+
+        # Java
+        if [ -f .java ]; then
+          echo "java installation requested"
+          echo "java=true" >> $GITHUB_OUTPUT
+        fi
+
+        # Node
+        if [ -f .node ]; then
+          echo "node installation requested"
+          echo "node=true" >> $GITHUB_OUTPUT
+        fi
+
+        # Python
+        if [ -f .python ]; then
+          echo "python installation requested"
+          echo "python=true" >> $GITHUB_OUTPUT
+        fi

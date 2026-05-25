@@ -1,15 +1,25 @@
 name: Maven Installer
-description: Maven central Installer
-
-inputs:
-  maven-version:
-    required: true
-    description: maven version
+description: Check for the maven version and if it's correct install it
 
 runs:
   using: composite
   steps:
-    - name: Set up Maven
-      uses: stCarolas/setup-maven@v5
+    - name: Get Maven Version
+      id: get-maven-version
+      shell: bash
+      run: |-
+        #Debug
+        maven_version="$(cat .maven)"
+
+        if [[ $maven_version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "maven-version=${maven_version}" >> $GITHUB_OUTPUT
+        else
+          echo "Error: Maven version not allowed."
+          echo "Version = ${maven_version}"
+          exit 1
+        fi
+
+    - name: Install Maven
+      uses: rhattox-shared-actions/shared-actions/actions/tools/maven/setup-maven@main
       with:
-        maven-version: ${{ inputs.maven-version }}
+        maven-version: ${{ steps.get-maven-version.outputs.maven-version }}
