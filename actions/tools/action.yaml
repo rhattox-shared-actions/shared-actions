@@ -16,7 +16,7 @@ runs:
         # Maven
         if [ -f .maven ]; then
           echo "maven installation requested"
-          echo maven=true >> $GITHUB_OUTPUT
+          echo "maven=true" >> $GITHUB_OUTPUT
         fi
 
         # Java
@@ -34,10 +34,9 @@ runs:
           echo "python installation requested"
         fi
 
-
     - name: Install Maven
       id: install_maven
-      if: steps.check_install.outputs.maven == true
+      if: steps.check_install.outputs.maven == 'true'
       shell: bash
       run: |-
         echo "Hello from step"
