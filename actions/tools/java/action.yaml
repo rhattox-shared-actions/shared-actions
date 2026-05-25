@@ -11,12 +11,13 @@ runs:
         #Debug
         java_version="$(cat .java)"
 
-        if [[ $java_version =~ "^([a-zA-Z-]+)-([0-9]{1,2})$" ]]; then
+        if [[ $java_version =~ ^([a-zA-Z-]+)-([0-9]{1,2})$ ]]; then
           echo "distribution=${java_version[1]}" >> $GITHUB_OUTPUT
           echo "java-version=${java_version[2]}" >> $GITHUB_OUTPUT
         else
           echo "Error: string error."
-          echo "Version = ${java_version}"
+          echo "${java_version}"
+          echo "distribution-version"
           exit 1
         fi
 
