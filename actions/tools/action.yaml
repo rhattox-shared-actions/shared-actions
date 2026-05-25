@@ -48,6 +48,6 @@ runs:
     - name: Install Maven
       id: install-maven
       if: steps.check-install.outputs.maven == 'true'
-      uses: rhattox-shared-actions/shared-actions/.github/actions/tools/maven@main
+      uses: rhattox-shared-actions/shared-actions/actions/tools/maven@main
       with:
         maven-version: ${{ steps.get-maven-version.outputs.maven-version }}
