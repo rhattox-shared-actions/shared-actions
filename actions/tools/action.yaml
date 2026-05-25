@@ -10,7 +10,7 @@ runs:
   using: composite
   steps:
     - name: Check for dotfile with the desired language
-      id: check_install
+      id: check-install-tools
       shell: bash
       run: |-
         # Maven
@@ -34,9 +34,20 @@ runs:
           echo "python installation requested"
         fi
 
-    - name: Install Maven
-      id: install_maven
-      if: steps.check_install.outputs.maven == 'true'
+    - name: Get Maven Version
+      id: get-maven-version
+      if: steps.check-install-tools.outputs.maven == 'true'
       shell: bash
       run: |-
-        echo "Hello from step"
+        #Debug
+        local maven_version="$(cat .maven-version)"
+        echo "MAVEN VERSION = ${maven_version}"
+
+        echo "maven-version=${maven_version}" >> $GITHUB_OUTPUT
+
+    - name: Install Maven
+      id: install-maven
+      if: steps.check-install.outputs.maven == 'true'
+      uses: rhattox-shared-actions/shared-actions/.github/actions/tools/maven@main
+      with:
+        maven-version: ${{ steps.get-maven-version.outputs.maven-version }}
