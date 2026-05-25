@@ -17,3 +17,7 @@ runs:
     - name: Install Maven
       if: steps.check-dotfile-lang.outputs.maven == 'true'
       uses: rhattox-shared-actions/shared-actions/actions/tools/maven@main
+
+    - name: Install Java
+      if: steps.check-dotfile-lang.outputs.java == 'true'
+      uses: rhattox-shared-actions/shared-actions/actions/tools/java@main
