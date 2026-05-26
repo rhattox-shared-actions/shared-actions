@@ -21,3 +21,11 @@ runs:
     - name: Install Java
       if: steps.check-dotfile-lang.outputs.java == 'true'
       uses: rhattox-shared-actions/shared-actions/actions/tools/java@main
+
+    - name: Install node
+      if: steps.check-dotfile-lang.outputs.java == 'true'
+      uses: rhattox-shared-actions/shared-actions/actions/tools/node@main
+
+    - name: Install python
+      if: steps.check-dotfile-lang.outputs.java == 'true'
+      uses: rhattox-shared-actions/shared-actions/actions/tools/python@main
