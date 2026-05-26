@@ -1,0 +1,25 @@
+name: node installer
+description: check for the node version and if it's correct install it
+
+runs:
+  using: composite
+  steps:
+    - name: get node version
+      id: get-node-version
+      shell: bash
+      run: |-
+        #debug
+        node_version="$(cat .node)"
+
+        if [[ $node_version =~ ^([0-9]{1,2})$ ]]; then
+          echo "node-version=${node_version}" >> $GITHUB_OUTPUT
+        else
+          echo "error: node version not allowed."
+          echo "version = ${node_version}"
+          exit 1
+        fi
+
+    - name: install node
+      uses: rhattox-shared-actions/shared-actions/actions/tools/node/setup-node@main
+      with:
+        node-version: ${{ steps.get-node-version.outputs.node-version }}

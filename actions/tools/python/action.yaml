@@ -1,0 +1,25 @@
+name: python installer
+description: check for the python version and if it's correct install it
+
+runs:
+  using: composite
+  steps:
+    - name: get python Version
+      id: get-python-version
+      shell: bash
+      run: |-
+        #Debug
+        python_version="$(cat .python)"
+
+        if [[ $python_version =~ ^([0-9]+\.[0-9]{1,2})$ ]]; then
+          echo "python-version=${python_version}" >> $GITHUB_OUTPUT
+        else
+          echo "error: python version not allowed."
+          echo "version = ${python_version}"
+          exit 1
+        fi
+
+    - name: Install python
+      uses: rhattox-shared-actions/shared-actions/actions/tools/python/setup-python@main
+      with:
+        python-version: ${{ steps.get-python-version.outputs.python-version }}

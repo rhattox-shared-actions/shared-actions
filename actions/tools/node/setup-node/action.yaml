@@ -1,0 +1,14 @@
+name: node installer
+description: node central Installer
+
+inputs:
+  node-version:
+    required: true
+    description: node version
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v6
+      with:
+        node-version: ${{ inputs.node-version }}

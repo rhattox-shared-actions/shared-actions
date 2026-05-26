@@ -1,0 +1,14 @@
+name: python installer
+description: python central installer
+
+inputs:
+  python-version:
+    required: true
+    description: python version
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v6
+      with:
+        python-version: "${{ inputs.python-version }}"
